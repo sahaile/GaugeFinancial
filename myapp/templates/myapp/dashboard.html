@@ -1,0 +1,37 @@
+{% extends 'myapp/base.html' %}
+ 
+ {% block title %}Dashboard | GaugeFinancial{% endblock %}
+
+
+ {% block content %}
+    <h1 class="mb-6 text-3xl">Welcome {{ user.first_name }} To Gauge Financial<h1>
+        <p>GaugeFinancial is a cutting-edge Django application designed to revolutionize how you manage your finances. By analyzing bank statements using advanced artificial intelligence algorithms, GaugeFinancial provides personalized financial tips and insights tailored to your financial habits and goals. Whether you're looking to save more, invest wisely, or manage your expenses efficiently, GaugeFinancial is your intelligent companion for achieving financial success.</p>
+        <p class="mt-4">To upload new bank statements click the new bank statement button in the menu above. <br>To view old bank statements click the bank statement button in the menu above.</p>
+        <h1 class="mb-6 mt-6 text-3xl">Recent Uploads:<h1>
+            <ul class="flex space-x-4">
+                {% for statement in statements %}
+                <div class="px-8 py-4 rounded-xl bg-gray-100 ">
+                    <li><strong>Name:</strong> {{ statement.name }}</li>
+                    <li><strong>ID:</strong> {{ statement.bankstatementID }}</li>
+                    <li><strong>Account Name:</strong> {{ statement.account }}</li>
+                    <li><strong>Upload Date:</strong> {{ statement.upload_date }}</li>
+                    <a href={% url 'view-bankstatement' statement.pk %}> 
+                        <button title="view" class="py-2 px-2 mt-2 bg-sky-400 hover:bg-sky-200 rounded-xl text-white"><ion-icon name="eye"></ion-icon></button> 
+                    </a>
+                    <a href={% url 'analyze-bankstatement' statement.pk %} >
+                        <button title="analyze" class="py-2 px-2 mt-2 bg-sky-400 hover:bg-sky-200 rounded-xl text-white" ><ion-icon name="Bar-chart"></ion-icon></button>
+                    </a>
+                    <a href="{{ statement.file.url }}" target="_blank">
+                        <button title="download" class="py-2 px-2 mt-2 bg-sky-400 hover:bg-sky-200 rounded-xl text-white" ><ion-icon name="Download"></ion-icon></button>
+                    </a>
+                    <a href={% url 'delete-bankstatement' statement.pk %}> 
+                        <button title="delete" class="py-2 px-2 mt-2 bg-sky-400 hover:bg-sky-200 rounded-xl text-white"><ion-icon name="Trash"></ion-icon></button> 
+                    </a>
+                </div>
+                {% empty %}
+                <li>No bank statements found.</li>
+                {% endfor %}
+            </ul>
+ {% endblock %}
+
+ 

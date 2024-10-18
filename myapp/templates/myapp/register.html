@@ -1,0 +1,71 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Sign Up | GaugeFinancial{% endblock %}
+
+{% block content %}
+<div class="w-3/4 my-30 p-6 mx-auto bg-gray-100 rounded-xl">
+    <h1 class="mb-6 text-3xl">Sign Up</h1>
+
+    <form method="POST" action=".">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label class='inline-block mb-2'>First Name</label><br>
+            {{ registerform.first_name }}
+            {% if registerform.first_name.errors %}
+                <div class="text-red-500 mt-1">{{ registerform.first_name.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="mb-3">
+            <label class='inline-block mb-2'>Last Name</label><br>
+            {{ registerform.last_name }}
+            {% if registerform.last_name.errors %}
+                <div class="text-red-500 mt-1">{{ registerform.last_name.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="mb-3">
+            <label class='inline-block mb-2'>Username</label><br>
+            {{ registerform.username }}
+            {% if registerform.username.errors %}
+                <div class="text-red-500 mt-1">{{ registerform.username.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="mb-3">
+            <label class='inline-block mb-2'>Email</label><br>
+            {{ registerform.email }}
+            {% if registerform.email.errors %}
+                <div class="text-red-500 mt-1">{{ registerform.email.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="mb-3">
+            <label class='inline-block mb-2'>Password</label><br>
+            {{ registerform.password1 }}
+            {% if registerform.password1.errors %}
+                <div class="text-red-500 mt-1">{{ registerform.password1.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="mb-3">
+            <label class='inline-block mb-2'>Repeat Password</label><br>
+            {{ registerform.password2 }}
+            {% if registerform.password2.errors %}
+                <div class="text-red-500 mt-1">{{ registerform.password2.errors }}</div>
+            {% endif %}
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                    <strong>{{ message.message }}</strong>
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <button class="mt-4 py-4 px-8 text-lg bg-sky-800 hover:bg-sky-950 rounded-xl text-white">Submit</button>
+    </form>
+</div>
+{% endblock %}

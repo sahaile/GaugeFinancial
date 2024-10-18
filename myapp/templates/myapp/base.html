@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>    
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>   
+    <title>{% block title %}GaugeFinancial{% endblock %}</title>
+</head>
+<body> 
+    {% if request.user.is_authenticated %}
+    <nav class="px-6 py-6 flex justify-between items-center border-b border-gray-200 bg-sky-950">
+        <a href="{% url 'dashboard' %}"><h1 class="mx-14 text-white text-2xl font-semibold text-center"><strong>Gauge</strong> Financial</h1></a>
+
+        <div class="space-x-10 pr-10">
+            <a href="{% url 'dashboard' %}" class="text-base font-semibold text-white hover:text-sky-700">Dashboard</a>
+            <a href="{% url 'new-bankstatement' %}" class="text-base font-semibold  text-white  hover:text-sky-700">New Bank Statement</a>
+            <a href="{% url 'bankstatements' %}" class="text-base font-semibold bg-sky-850 text-white hover:text-sky-700">Bank Statements</a>
+            <a href="{% url 'profile' %}" class="text-base font-semibold bg-sky-850 text-white hover:text-sky-700">Profile</a>
+            <a href="{% url 'user-logout' %}" class="  text-base font-semibold bg-sky-850 text-white  hover:text-sky-700">Logout</a>
+        </div>
+    </nav>
+    {% endif %}
+    <div class="container mx-auto mt-8">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <script>
+        // Timezone settings
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone; // e.g. "America/New_York"
+        document.cookie = "django_timezone=" + timezone;
+    </script>
+</body>
+</html>

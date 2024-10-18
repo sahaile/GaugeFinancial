@@ -1,0 +1,59 @@
+{% extends 'myapp/base.html' %}
+ 
+{% block title %}View | GaugeFinancial{% endblock %}
+
+
+{% block content %}
+
+<body clsss="bg-gray-50">
+<h1 class="mb-5 text-3xl">Bank Statement: {{ bankstatement.name }}</h1>
+
+<table id="myTable" class="display" style="width:100%">
+    <thead>
+        <tr>
+            <th>Transaction ID </th>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Revenue</th>
+            <th>Expenses</th>
+            <th>Category</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {% for transaction in transactions %}
+        <tr>
+            <td>{{ transaction.transactionID }}</td>
+            <td>{{ transaction.date }}</td>
+            <td>{{ transaction.description }}</td>
+            <td>{{ transaction.revenue }}</td>
+            <td>{{ transaction.expenses }}</td>
+            <td>{{ transaction.category }}</td>
+
+        </tr> 
+        {% endfor %}
+    </tbody>
+</table>
+
+<script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+<script>
+$(document).ready(function() {
+    $('#myTable').DataTable();
+});
+</script>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.18/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css">
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            responsive: true
+        });
+    });
+</script>
+{% endblock %}

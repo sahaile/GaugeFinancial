@@ -1,0 +1,18 @@
+{% extends 'myapp/base.html' %}
+ 
+{% block title %}Profile | GaugeFinancial{% endblock %}
+
+
+{% block content %} 
+    <div class="flex justify-center items-center " style="margin-top: 100px;">
+        <div class="text-center bg-gray-50 p-6 rounded-lg shadow-md max-w-md w-full space-between">
+            <h1><strong>First Name:</strong> {{ user.first_name }}</h1>
+            <h1><strong>Last Name:</strong> {{ user.last_name }}</h1>
+            <h1><strong>Username:</strong> {{ user.username }}</h1>
+            <h1 class='mb-3'><strong>Email:</strong> {{ user.email }}</h1>
+            <a href="{% url 'edit-profile' %}" class="inline-block py-2 px-4 bg-sky-400 hover:bg-gray-500 text-white font-bold rounded">Edit Profile</a>
+            <a href="{% url 'edit-password' %}" class="inline-block py-2 px-4 bg-sky-400 hover:bg-gray-500 text-white font-bold rounded">Change Password</a>
+            <a href="{% url 'delete-profile' %}" class="mt-2 inline-block py-2 px-4 bg-gray-500 hover:bg-gray-700 text-white font-bold rounded whitespace-nowrap">Delete Account</a>
+        </div>
+    </div>
+{% endblock %}

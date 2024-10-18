@@ -1,0 +1,444 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Analyze | GaugeFinancial{% endblock %}
+
+{% block content %}
+    <style>
+        body {
+            background-color: #F5F6F9;
+        }
+        
+        .chart-container {
+            display: flex;
+        }
+        
+        .chart-1 {
+            background-color: white;
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chart-2 {
+            background-color: white;
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+            flex: 1;
+            margin: 0 20px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .header {
+            background-color: #F8F9FD;
+            padding: 20px;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        
+        #chartCanvas {
+            width: 70% !important;
+            height: 90% !important;
+            padding: 10px;
+        }
+        
+        .button-container {
+            display: flex;
+        }
+        
+        .button-date, .button-type, .button-data {
+            margin: 2px;
+        }
+        
+        .button {
+            background-color: #015883; 
+            color: white;
+            transition: background-color 0.3s ease;
+            padding: 5px 5px; 
+            cursor: pointer; 
+            border-radius: 4px; 
+        }
+        
+        .button:hover {
+            background-color: #014465; 
+        }
+        
+        .button.active {
+            background-color: #014465; 
+        }        
+    </style>
+
+    <h1 class="mb-6 text-3xl">Assessment of <strong>{{ statement.name }}</strong></h1>
+    <div class="chart-container">
+        <div class="chart-1">
+            <section class="header">
+                <h1>Revenue v.s Expenses</h1>
+                <div class="button-container">
+                    <div class="button-date">
+                        <button onclick="updateChartView('monthly')" class="button active">Monthly</button>
+                        <button onclick="updateChartView('yearly')" class="button">Yearly</button>
+                    </div>
+                    <div class="button-type">
+                        <button onclick="updateChartType('bar')" class="button active">Bar</button>
+                        <button onclick="updateChartType('line')" class="button">Line</button>
+                    </div>
+                </div>
+            </section>
+            <canvas id="chartCanvas"></canvas>
+        </div>
+        <div class="chart-2">
+            <section class="header">
+                <h1>Categorical Analysis</h1>
+                <div class="button-container">
+                    <div class="button-data">
+                        <button onclick="updateChartData('expenses')" class="button active">Expenses</button>
+                        <button onclick="updateChartData('transactions')" class="button">Transactions</button>
+                    </div>
+                </div>
+            </section>
+            <canvas id="pieChartCanvas"></canvas>
+        </div>
+    </div>
+    <div class="api-advisor">
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const monthlySummaryRevenue = {{ monthly_summary_revenue|safe }};
+        const monthlySummaryExpenses = {{ monthly_summary_expenses|safe }};
+        const yearlySummaryRevenue = {{ yearly_summary_revenue|safe }};
+        const yearlySummaryExpenses = {{ yearly_summary_expenses|safe }};
+
+        let chartType = 'line'; // Default chart type
+        let view = 'monthly'; // Default view
+        let chart;
+
+        function createChart(type, view) {
+            const ctx = document.getElementById('chartCanvas').getContext('2d');
+
+            if (chart) chart.destroy();
+
+            chart = new Chart(ctx, {
+                type: type,
+                data: getChartData(view),
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function getChartData(view) {
+            if (view === 'monthly') {
+                return {
+                    labels: monthlySummaryRevenue.map(item => item.x),
+                    datasets: [
+                        {
+                            label: 'Monthly Revenue',
+                            data: monthlySummaryRevenue.map(item => item.y),
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Monthly Expenses',
+                            data: monthlySummaryExpenses.map(item => item.y),
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                };
+            } else { // yearly
+                return {
+                    labels: yearlySummaryRevenue.map(item => item.x),
+                    datasets: [
+                        {
+                            label: 'Yearly Revenue',
+                            data: yearlySummaryRevenue.map(item => item.y),
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Yearly Expenses',
+                            data: yearlySummaryExpenses.map(item => item.y),
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                };
+            }
+        }
+
+        function updateChartView(newView) {
+            view = newView;
+            createChart(chartType, view);
+            document.querySelectorAll('.button-date .button').forEach(button => {
+                button.classList.toggle('active', button.textContent.toLowerCase() === view);
+            });
+        }
+
+        function updateChartType(newType) {
+            chartType = newType;
+            createChart(chartType, view);
+            document.querySelectorAll('.button-type .button').forEach(button => {
+                button.classList.toggle('active', button.textContent.toLowerCase() === newType);
+            });
+        }
+
+        createChart(chartType, view);
+    </script>
+
+    <script>
+        const categoricalSummary = {{ categorical_summary| safe }};
+
+        const categories = categoricalSummary.map(data => data.category);
+        const expenses = categoricalSummary.map(data => data.total_expenses);
+        const transactions = categoricalSummary.map(data => data.total_transactions);
+
+        const ctx = document.getElementById('pieChartCanvas').getContext('2d');
+        const pieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: categories,
+                datasets: [{
+                    label: 'Total Expenses',
+                    data: expenses,
+                    backgroundColor: [
+                    'rgba(75, 192, 192, 0.2)', // Teal
+                    'rgba(255, 99, 132, 0.2)', // Pink
+                    'rgba(255, 206, 86, 0.2)', // Yellow
+                    'rgba(153, 102, 255, 0.2)', // Purple
+                    'rgba(255, 159, 64, 0.2)', // Orange
+                    'rgba(54, 162, 235, 0.2)', // Light Blue
+                    'rgba(255, 99, 71, 0.2)', // Tomato
+                    'rgba(0, 128, 0, 0.2)', // Green
+                    'rgba(128, 0, 128, 0.2)', // Purple
+                    'rgba(255, 165, 0, 0.2)'  // Orange
+                    ],
+                    borderColors : [
+                        'rgba(75, 192, 192, 1)', // Teal
+                        'rgba(255, 99, 132, 1)', // Pink
+                        'rgba(255, 206, 86, 1)', // Yellow
+                        'rgba(153, 102, 255, 1)', // Purple
+                        'rgba(255, 159, 64, 1)', // Orange
+                        'rgba(54, 162, 235, 1)', // Light Blue
+                        'rgba(255, 99, 71, 1)', // Tomato
+                        'rgba(0, 128, 0, 1)', // Green
+                        'rgba(128, 0, 128, 1)', // Purple
+                        'rgba(255, 165, 0, 1)'  // Orange
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return `${tooltipItem.label}: ${tooltipItem.raw}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        function updateChartData(type) {
+            const newData = type === 'expenses' ? expenses : transactions;
+            const newLabel = type === 'expenses' ? 'Total Expenses' : 'Total Transactions';
+            
+            pieChart.data.datasets[0].data = newData;
+            pieChart.data.datasets[0].label = newLabel;
+            pieChart.update();
+            
+            // Update button active states
+            document.querySelectorAll('.button-data .button').forEach(button => {
+                button.classList.toggle('active', button.textContent.toLowerCase() === type);
+            });
+        }
+    </script>
+
+    <style>
+        .chat-container {
+            background-color: white; /* White background for the chart containers */
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+            margin-top:30px;
+            margin-bottom: 50px; 
+        }
+        
+        .messages-box {
+            padding: 10px;
+            overflow: scroll;
+            max-height:70vh;
+            min-height:30vh;
+        }
+        
+        .messages-list {
+            padding-left: 0;
+            margin: 0;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+        }
+        
+        .message-text {
+            padding: 10px;
+        }
+        
+        .sent {
+            background-color: #d9edfc;
+            width: 80%;
+            border-radius: 5px;
+            align-self: flex-end;
+        }
+        
+        .received {
+            width: 80%;
+            background-color: #f1f0f0;
+            border-radius: 5px;
+            align-self: flex-start;
+        }
+        
+        .message-form .input-group {
+            display: flex;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #ddd;
+        }
+        
+        .message-input {
+            border: 1px solid #e5e7eb; 
+            padding: 2px; 
+            border-radius: 5px; 
+            outline: none;
+            width: 90%;
+        }
+        
+        .btn-send {
+            border-radius: 0;
+            padding:2px; 
+            background-color:#015883; 
+            color: white;
+            border: none;
+            border-radius: 5px; 
+            cursor: pointer; 
+            margin-left: 10px; 
+        }
+        
+      </style>    
+    
+    <div class="chat-container">
+        <section class="header">
+            <h1>AI Gauge Advisor</h1>
+        </section>
+      <div class="card flex-grow-1">
+        <div class="card-body messages-box">
+          
+          <ul class="list-unstyled messages-list">
+            
+            <li class="message received">
+              <div class="message-text">
+                <div class="message-sender">
+                  <b>Gauge Advisor</b>
+                </div>
+                <div class="message-content">
+                  Hi, I am your Gauge Advisor, you can ask me anything.
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <form class="message-form">
+        {%csrf_token%}
+        <div class="input-group">
+          <input type="text" class="form-control message-input" placeholder=" Ask Gauge">
+          <div class="input-group-append">
+            <button type="submit" class="btn btn-primary btn-send">Send</button>
+          </div>
+        </div>
+      </form>    
+    <script>
+        const messagesList = document.querySelector('.messages-list');
+        const messageForm = document.querySelector('.message-form');
+        const messageInput = document.querySelector('.message-input');
+
+        messageForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        
+        const message = messageInput.value.trim();
+        if (message.length === 0) return;
+        
+        const messageItem = document.createElement('li');
+        messageItem.classList.add('message', 'sent');
+        messageItem.innerHTML = `
+            <div class="message-text">
+                <div class="message-sender">
+                    <b>You</b>
+                </div>
+                <div class="message-content">
+                    ${message}
+                </div>
+            </div>`;
+        messagesList.appendChild(messageItem);
+    
+        messageInput.value = '';
+        
+        fetch('', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                'csrfmiddlewaretoken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'message': message
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const response = data.response;
+            const responseItem = document.createElement('li');
+            responseItem.classList.add('message', 'received');
+            responseItem.innerHTML = `
+            <div class="message-text">
+                <div class="message-sender">
+                    <b>Gauge Advisor</b>
+                </div>
+                <div class="message-content">
+                    ${response}
+                </div>
+            </div>`;
+            messagesList.appendChild(responseItem);
+        });
+        });
+    </script>
+</div>
+
+    
+{% endblock %}

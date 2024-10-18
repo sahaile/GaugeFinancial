@@ -1,0 +1,62 @@
+body {
+    background-color: #F5F6F9;
+}
+.chart-container {
+    display: flex;
+}
+
+.chart-1 {
+    background-color: white; /* White background for the chart containers */
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content horizontally */
+    justify-content: center; /* Center content vertically */
+}
+
+.chart-2 {
+    background-color: white; /* White background for the chart containers */
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    flex: 1;
+    margin: 0 20px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content horizontally */
+    justify-content: center; /* Center content vertically */
+}
+
+.header {
+    background-color: #F8F9FD; /* Light gray background */
+    padding: 20px; /* Add some padding around the header content */
+    border-bottom: 1px solid #ccc; /* Light border for separation */
+    display:flex;
+    justify-content:space-between;
+    align-items: center;
+    width: 100%; /* Full width */
+}
+
+#chartCanvas {
+    width: 70% !important; /* Ensure canvas takes full width of container */
+    height: 90% !important; /* Ensure canvas takes full height of container */
+    padding:10px;
+}
+
+.button {
+    background-color: #015883; 
+    color: white;
+    transition: background-color 0.3s ease;
+    padding: 5px 5px; 
+    cursor: pointer; 
+    border-radius: 4px; 
+}
+
+.button:hover {
+    background-color:#014465; 
+}
+
+.button.active {
+    background-color: #014465; 
+}        

@@ -1,0 +1,45 @@
+{% extends 'myapp/base.html' %}
+ 
+ {% block title %}New Bank Statement | GaugeFinancial{% endblock %}
+
+
+ {% block content %}
+ <div class="w-3/4 my-15 p-6 mx-auto bg-gray-100 rounded-xl">
+    <h1 class="mb-2 text-3xl">Guidelines:<h1>
+        <p class='mb-6'>- Only CSV, XLS, XLSX, or XLSM files are allowed.<br>- Depending on the number of transactions, uploads may take a few minutes. To see progress open the dashboard in a new tab and select the bank statement viewing option. <br>- Files should be formatted with 'TransactionID', 'Date', 'Description', 'Expenses', and 'Revenue' as column titles
+        <br>* If files are not fromatted this way, uploads will be unsuccessful</p>
+        <h1 class="mb-2 text-3xl">Example of File Layout:</h1>
+        {% load static %}
+        <img src="{% static 'exampleFile.png' %}" alt=" Example of acceptable file">
+    <h1 class="mb-6 mt-6 text-3xl">Upload A New Bank Statement:</h1>
+    
+    <form enctype="multipart/form-data" method="POST">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class='inline-block mb-2'>Title</label><br>
+                {{ uploadfileform.title }}
+            </div>
+            <div class="mb-3">
+                <label class='inline-block mb-2'>Account Name</label><br>
+                {{ uploadfileform.account }}
+            </div>
+            <div class="mb-3">
+                <label class='inline-block mb-2'>File</label><br>
+                {{ uploadfileform.file }}
+            </div>
+        
+            {% if uploadfileform.errors or uploadfileform.non_field_errors %}
+                <div class="mb-3 p-6 bg-red-100 rounded-xl">
+                    {% for field in uploadfileform %}
+                        {{ field.errors }}
+                    {% endfor %}
+                    {{ uploadfileform.non_field_errors }}
+                </div>
+            {% endif %}
+
+
+            <button class="py-4 px-8 text-lg bg-sky-800 hover:bg-sky-950 rounded-xl text-white">Upload</button>
+    </form>
+</div>
+ {% endblock %}

@@ -1,0 +1,1 @@
+web gunicorn gaugefinancial.wsgi:application --log-file -
