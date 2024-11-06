@@ -6,6 +6,7 @@ Gauge Financial is a comprehensive Personal Finance Management System developed 
     <img src="https://github.com/sahaile/gaugefinancial/blob/master/Screen%20Shot%202024-10-14%20at%2010.40.32%20AM.png" alt="Application Screenshot 1" width="500">
     <img src="https://github.com/sahaile/gaugefinancial/blob/master/Screen%20Shot%202024-10-14%20at%2010.41.24%20AM.png" alt="Application Screenshot 2" width="500">
 </div>
+
 ## Table of Contents
 
 - [About](#about)
