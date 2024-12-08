@@ -38,10 +38,10 @@ Gauge Financial enables users to register, upload bank statements, and analyze t
 ## Technologies Used
 
 - **Python**
-- **Django**: A high-level Python web framework for building web applications.
-- **Pandas**: A powerful data analysis library for Python, used for data manipulation.
+- **Django**
+- **Pandas**
 - **OpenAI API**: Utilized for intelligent transaction categorization.
-- **Heroku**: For application deployment.
+- **Heroku**
 
 ## Getting Started
 
