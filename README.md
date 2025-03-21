@@ -13,7 +13,6 @@ Gauge Financial is a comprehensive Personal Finance Management System developed 
 - [Key Features](#key-features)
 - [Technologies Used](#technologies-used)
 - [Getting Started](#getting-started)
-- [Demo](#demo)
 
 ## About
 
@@ -51,15 +50,10 @@ To set up the project locally, follow these instructions:
    ```bash
    git clone https://github.com/your-username/gauge-financial.git
    cd gauge-financial
-2. **Run the development server**:
+2. Must include an OpenAI key in views.py
+3. **Run the development server**:
    ```bash
     python3 manage.py runserver
-3. **Access the application**:
+4. **Access the application**:
    Open your web browser and go to http://127.0.0.1:8000/.
-
-## DEMO
-
-A live demo of the Gauge Financial application is available for users to explore its features and functionalities. 
-
-You can access the demo here: [Gauge Financial Demo](https://gaugefinancial-1cb99b97e679.herokuapp.com/)
 
