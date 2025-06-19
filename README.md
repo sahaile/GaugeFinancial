@@ -54,6 +54,3 @@ To set up the project locally, follow these instructions:
 3. **Run the development server**:
    ```bash
     python3 manage.py runserver
-4. **Access the application**:
-   Open your web browser and go to http://127.0.0.1:8000/.
-
